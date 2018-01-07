@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package konsoleninputtest;
+package input;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -42,7 +42,7 @@ public class KonsoleInput{
                     String s = new String(b,0,i);
                     consoleInputAction.ActionConsoleInput(s);
                 } catch (IOException ex) {
-                    Logger.getLogger(KonsolenInputTest.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(KonsoleInput.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

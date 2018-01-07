@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package konsoleninputtest;
+
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import input.IKonsoleInputAction;
+import input.KonsoleInput;
 
 /**
  *
