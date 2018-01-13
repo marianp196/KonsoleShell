@@ -3,18 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package shell;
+package shell.abstractions;
 
 /**
  *
  * @author marian
  */
-public interface IShell {
-    void SetPrompt(String prompt);
-    String GetPromt();
+public interface IProgramm 
+{
+    String GetProgrammIdentifier();
+    String GetErklaerung();
     
-    void SetPraeambel(String prompt);
-    String GetPraeambel();
-
-    void AddProgramm(IProgramm p) throws Exception;
+    void Invoke(String[] param);
 }

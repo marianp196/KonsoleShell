@@ -5,6 +5,8 @@
  */
 package shell;
 
+import shell.abstractions.IShell;
+import shell.abstractions.IProgramm;
 import java.util.ArrayList;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -77,18 +79,17 @@ public class Shell implements IShell,Observer
         }
     }
 
-    private boolean doItOtze(String befehl) throws Exception {
+    private void doItOtze(String befehl) throws Exception {
         BefehlsDecoder decoder = new BefehlsDecoder(befehl);
         
         if (!decoder.HasBefehl()) {
             printer.PrintLn("Befehl nicht interpretierbar!");
-            return true;
+            return;
         }               
         
         IProgramm programm = programmVerwalter.getProgramm(decoder.GetProgramm());
         
         invokeProgramm(decoder.GetParameter(), programm);
-        return false;
     }
           
     private void printPrompt() 
@@ -96,10 +97,10 @@ public class Shell implements IShell,Observer
         printer.Print(promt);
     }  
       
-     private void invokeProgramm(String[] parameter, IProgramm programm) throws Exception 
-     {        
-        programm.Invoke(parameter);
-     }
+    private void invokeProgramm(String[] parameter, IProgramm programm) throws Exception 
+    {        
+       programm.Invoke(parameter);
+    }
      
     private void entferneZeilenumbruch(String befehl) {
        befehl = befehl.replace("\n", "");
