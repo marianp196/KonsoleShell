@@ -7,6 +7,10 @@
 
 import input.KonsoleInput;
 import java.util.Observer;
+import output.IPrinter;
+import output.StandardPrinter;
+import shell.Shell;
+import shell.abstractions.IShell;
 
 /**
  *
@@ -17,9 +21,12 @@ class KonsolenInputTest implements Observer{
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) 
+    public static void main(String[] args) throws Exception 
     {   
-        KonsoleInput ci = new KonsoleInput(new KonsolenInputTest());   
+        IPrinter print = new StandardPrinter();
+        IShell shell = new Shell(print);
+        KonsoleInput ci = new KonsoleInput((Observer) shell);
+        shell.AddProgramm(new TestProgramm());
     }
 
     @Override

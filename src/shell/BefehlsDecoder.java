@@ -6,6 +6,7 @@
 package shell;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -50,13 +51,26 @@ public class BefehlsDecoder {
     private void befehlToArray() 
     {
         String[] elemente = befehl.split(" ");
-        ArrayList<String> resuList = new ArrayList<>();
+        
+        if(elemente.length == 0)
+        {
+            befehlsElemente = new String[]{befehl};
+        }else
+        {
+            befehlsElemente = getElementeWithoutWhitespace(elemente);
+        }        
+         
+    }
+
+    private String[] getElementeWithoutWhitespace(String[] elemente) {
+        ArrayList<String> resuList = new ArrayList<String>();
         for(String element : elemente)
         {
             if(!(element.equals(" ") || element.equals("")))
                 resuList.add(element);
         }
-        befehlsElemente = (String[])resuList.toArray();
+        return Arrays.copyOf(resuList.toArray(),
+                resuList.toArray().length, String[].class); 
     }
     
     private String befehl;

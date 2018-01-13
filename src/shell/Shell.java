@@ -68,9 +68,8 @@ public class Shell implements IShell,Observer
     public void update(java.util.Observable o, Object arg) 
     {     
         try {
-            String befehl = (String)arg;
-            entferneZeilenumbruch(befehl);
-            doItOtze(befehl);           
+            String befehl = (String)arg;            
+            doItOtze(entferneZeilenumbruch(befehl));           
         } catch (Exception ex) {
             Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
         }finally
@@ -89,6 +88,12 @@ public class Shell implements IShell,Observer
         
         IProgramm programm = programmVerwalter.getProgramm(decoder.GetProgramm());
         
+        if(programm == null)
+        {
+            printer.PrintLn("Befehl nicht vorhanden");
+            return;
+        }
+        
         invokeProgramm(decoder.GetParameter(), programm);
     }
           
@@ -102,8 +107,8 @@ public class Shell implements IShell,Observer
        programm.Invoke(parameter);
     }
      
-    private void entferneZeilenumbruch(String befehl) {
-       befehl = befehl.replace("\n", "");
+    private String entferneZeilenumbruch(String befehl) {
+       return befehl.replaceAll("\n", "");
     }
 
     
