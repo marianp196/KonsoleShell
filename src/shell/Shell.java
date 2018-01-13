@@ -22,7 +22,6 @@ import output.IPrinter;
 */
 public class Shell implements IShell,Observer 
 {
-
     public Shell(IPrinter printer) {       
         this.printer = printer; 
         printPrompt();
@@ -65,8 +64,7 @@ public class Shell implements IShell,Observer
     
     @Override
     public void update(java.util.Observable o, Object arg) 
-    {       
-       
+    {     
         try {
             String befehl = (String)arg;
             entferneZeilenumbruch(befehl);
@@ -80,50 +78,26 @@ public class Shell implements IShell,Observer
     }
 
     private boolean doItOtze(String befehl) throws Exception {
-        String[] befehlElemente = getBefehlElemente(befehl);
-        if (befehlElemente.length == 0) {
-            return true;
-        }
-        IProgramm programm = programmVerwalter.getProgramm(befehlElemente[0]);
-        if (programm == null) {
+        BefehlsDecoder decoder = new BefehlsDecoder(befehl);
+        
+        if (!decoder.HasBefehl()) {
             printer.PrintLn("Befehl nicht interpretierbar!");
             return true;
-        }
-        invokeProgramm(befehlElemente, programm);
+        }               
+        
+        IProgramm programm = programmVerwalter.getProgramm(decoder.GetProgramm());
+        
+        invokeProgramm(decoder.GetParameter(), programm);
         return false;
     }
           
     private void printPrompt() 
     {
         printer.Print(promt);
-    }       
-    
-        
-    private String[] getBefehlElemente(String befehl) 
-    {
-        String[] elemente = befehl.split(" ");
-        ArrayList<String> resuList = new ArrayList<>();
-        for(String element : elemente)
-        {
-            if(!(element.equals(" ") || element.equals("")))
-                resuList.add(element);
-        }
-        return (String[])resuList.toArray();
-    }
-
-        
-     private void invokeProgramm(String[] befehlElemente, IProgramm programm) throws Exception 
-     {
-         if(befehlElemente.length == 0)
-             throw new Exception("Kein Befehl übergeben!");
-         
-        int length = befehlElemente.length -1;                  
-        String[] parameter = new String[length];
-        
-        for(int i = 1; i < befehlElemente.length; i++)
-        {
-            parameter[i-1] = befehlElemente[i];
-        }
+    }  
+      
+     private void invokeProgramm(String[] parameter, IProgramm programm) throws Exception 
+     {        
         programm.Invoke(parameter);
      }
      
