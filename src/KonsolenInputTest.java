@@ -5,32 +5,28 @@
  */
 
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import input.IKonsoleInputAction;
 import input.KonsoleInput;
+import java.util.Observer;
 
 /**
  *
  * @author marian
  */
-class KonsolenInputTest implements IKonsoleInputAction{
+class KonsolenInputTest implements Observer{
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) 
     {   
-        KonsoleInput ci = new KonsoleInput(new KonsolenInputTest());
+        KonsoleInput ci = new KonsoleInput(new KonsolenInputTest());   
     }
 
     @Override
-    public void ActionConsoleInput(String inputText) 
+    public void update(java.util.Observable o, Object arg) 
     {
-        System.out.print(inputText);
+        System.out.print(arg);
     }
+
+    
 }

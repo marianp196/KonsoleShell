@@ -5,60 +5,159 @@
  */
 package shell;
 
-import input.IKonsoleInputAction;
-import input.KonsoleInput;
+import java.util.ArrayList;
+import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import output.IPrinter;
 
 /**
  *
  * @author marian
  */
-public class Shell implements IShell,IKonsoleInputAction 
+/*ToDo
+   -Das PraeambelProblem
+   -
+
+*/
+public class Shell implements IShell,Observer 
 {
 
     public Shell(IPrinter printer) {       
-        this.printer = printer;
-        konsoleInput = new KonsoleInput(this);//scheiß design        
+        this.printer = printer;      
+        programme = new ArrayList<>();
         printPrompt();
     }     
     
     @Override
-    public void SetPrompt(String prompt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void SetPrompt(String prompt) 
+    {
+        if(promt == null)
+            throw new NullPointerException("promt");
+        this.promt = promt;
     }
 
     @Override
-    public String GetPromt() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String GetPromt() 
+    {
+        return promt;
     }
 
     @Override
-    public void SetPraeambel(String prompt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void SetPraeambel(String praeambel) 
+    {
+        if(praeambel == null)
+            throw new NullPointerException("praeambel");
+        this.praeambel = praeambel;
+        printer.PrintLn(praeambel);
     }
 
     @Override
-    public String GetPraeambel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String GetPraeambel() 
+    {
+        return praeambel;
     }
 
     @Override
-    public void AddProgramm(IProgramm p) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void AddProgramm(IProgramm p) throws Exception 
+    {
+        if(!checkProgramm(p))
+            throw new Exception("Programm schon hinzugefuegt!");
+        programme.add(p);
     }
     
     @Override
-    public void ActionConsoleInput(String inputText) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void update(java.util.Observable o, Object arg) 
+    {       
+       
+        try {
+            String befehl = (String)arg;
+            entferneZeilenumbruch(befehl);
+            doItOtze(befehl);           
+        } catch (Exception ex) {
+            Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+        }finally
+        {
+            printPrompt();
+        }
     }
+
+    private boolean doItOtze(String befehl) throws Exception {
+        String[] befehlElemente = getBefehlElemente(befehl);
+        if (befehlElemente.length == 0) {
+            return true;
+        }
+        IProgramm programm = getProgramm(befehlElemente[0]);
+        if (programm == null) {
+            printer.PrintLn("Befehl nicht interpretierbar!");
+            return true;
+        }
+        invokeProgramm(befehlElemente, programm);
+        return false;
+    }
+          
+    private void printPrompt() 
+    {
+        printer.Print(promt);
+    }       
+    
+    private boolean checkProgramm(IProgramm programm) 
+    {
+        return getProgramm(programm.GetProgrammIdentifier()) == null;
+    }
+    
+    private String[] getBefehlElemente(String befehl) 
+    {
+        String[] elemente = befehl.split(" ");
+        ArrayList<String> resuList = new ArrayList<>();
+        for(String element : elemente)
+        {
+            if(!(element.equals(" ") || element.equals("")))
+                resuList.add(element);
+        }
+        return (String[])resuList.toArray();
+    }
+
+    private IProgramm getProgramm(String name) 
+    {
+        IProgramm result = null;
         
-    private void printPrompt() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(IProgramm p : programme)
+        {
+           if(p.GetProgrammIdentifier().equals(name))
+           {              
+               result = p;
+               break;
+           }
+        }        
+        return result;
     }
     
+     private void invokeProgramm(String[] befehlElemente, IProgramm programm) throws Exception 
+     {
+         if(befehlElemente.length == 0)
+             throw new Exception("Kein Befehl übergeben!");
+         
+        int length = befehlElemente.length -1;                  
+        String[] parameter = new String[length];
+        
+        for(int i = 1; i < befehlElemente.length; i++)
+        {
+            parameter[i-1] = befehlElemente[i];
+        }
+        programm.Invoke(parameter);
+     }
+     
+    private void entferneZeilenumbruch(String befehl) {
+       befehl = befehl.replace("\n", "");
+    }
+
     
-    
-    private IPrinter printer;
-    private KonsoleInput konsoleInput;
+    private IPrinter printer; 
+    private String promt = ">>>";
+    private String praeambel = "*****************************************\n"
+                              +"**************Standard-Shell*************\n"
+                              +"*****************************************";
+    private ArrayList<IProgramm> programme;          
     
 }
