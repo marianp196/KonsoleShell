@@ -24,8 +24,7 @@ public class Shell implements IShell,Observer
 {
 
     public Shell(IPrinter printer) {       
-        this.printer = printer;      
-        programme = new ArrayList<>();
+        this.printer = printer; 
         printPrompt();
     }     
     
@@ -61,9 +60,7 @@ public class Shell implements IShell,Observer
     @Override
     public void AddProgramm(IProgramm p) throws Exception 
     {
-        if(!checkProgramm(p))
-            throw new Exception("Programm schon hinzugefuegt!");
-        programme.add(p);
+        programmVerwalter.AddProgramm(p);
     }
     
     @Override
@@ -87,7 +84,7 @@ public class Shell implements IShell,Observer
         if (befehlElemente.length == 0) {
             return true;
         }
-        IProgramm programm = getProgramm(befehlElemente[0]);
+        IProgramm programm = programmVerwalter.getProgramm(befehlElemente[0]);
         if (programm == null) {
             printer.PrintLn("Befehl nicht interpretierbar!");
             return true;
@@ -101,11 +98,7 @@ public class Shell implements IShell,Observer
         printer.Print(promt);
     }       
     
-    private boolean checkProgramm(IProgramm programm) 
-    {
-        return getProgramm(programm.GetProgrammIdentifier()) == null;
-    }
-    
+        
     private String[] getBefehlElemente(String befehl) 
     {
         String[] elemente = befehl.split(" ");
@@ -118,21 +111,7 @@ public class Shell implements IShell,Observer
         return (String[])resuList.toArray();
     }
 
-    private IProgramm getProgramm(String name) 
-    {
-        IProgramm result = null;
         
-        for(IProgramm p : programme)
-        {
-           if(p.GetProgrammIdentifier().equals(name))
-           {              
-               result = p;
-               break;
-           }
-        }        
-        return result;
-    }
-    
      private void invokeProgramm(String[] befehlElemente, IProgramm programm) throws Exception 
      {
          if(befehlElemente.length == 0)
@@ -158,6 +137,6 @@ public class Shell implements IShell,Observer
     private String praeambel = "*****************************************\n"
                               +"**************Standard-Shell*************\n"
                               +"*****************************************";
-    private ArrayList<IProgramm> programme;          
+    private ProgrammVerwalter programmVerwalter = new ProgrammVerwalter();
     
 }

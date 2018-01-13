@@ -29,8 +29,8 @@ public class KonsoleInput extends Observable
    
     private void triggerInput(String input)
     {
-        notifyObservers(input);
         setChanged();
+        notifyObservers(input);        
     }
     
     private Thread thread;   
