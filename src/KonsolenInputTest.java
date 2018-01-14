@@ -28,10 +28,12 @@ class KonsolenInputTest implements Observer{
     }
 
     private static void testshell() throws Exception {
+        KonsoleInput ci = new KonsoleInput();
         IPrinter print = new StandardPrinter();
-        IShell shell = new Shell(print);
-        KonsoleInput ci = new KonsoleInput((Observer) shell);
+        
+        IShell shell = new Shell(print);        
         shell.AddProgramm(new TestProgramm());
+        ci.addObserver((Observer) shell);
     }
 
     @Override

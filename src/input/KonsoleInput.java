@@ -16,17 +16,19 @@ import javafx.beans.value.ObservableValueBase;
  *
  * @author marian
  */
+/*
+ToDo:
+    Braucht vielleicht noch Refactorieruing
+
+*/
 public class KonsoleInput extends Observable
 {
 
-    public KonsoleInput(Observer o) {      
-        if(o == null)
-            throw new NullPointerException("observer");
-        addObserver(o);
-        thread = new Thread(new ConsoleInputThread());
+    public KonsoleInput() {     
+        thread = new Thread(new ConsoleInputThread(this));
         thread.start();        
     } 
-   
+     
     private void triggerInput(String input)
     {
         setChanged();
@@ -36,27 +38,41 @@ public class KonsoleInput extends Observable
     private Thread thread;   
     
     private class ConsoleInputThread implements Runnable{
-             
+
+        public ConsoleInputThread(KonsoleInput konsolenInput) 
+        {
+            this.konsolenInput = konsolenInput;
+        }
+               
+        
         @Override
         public void run() 
         {
             String input = "";
             while(true)
             {
+                if(konsolenInput.countObservers() == 0)
+                    continue;
+                
                 try {
                     byte[] b = new byte[100];
                     int i = System.in.read(b);
+                    
                     input += new String(b,0,i);
+                    
                     if(input.contains("\n"))
                     {
                         triggerInput(input);
                         input="";
                     }
+                    
                 } catch (IOException ex) {
                     Logger.getLogger(KonsoleInput.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
             }
         }       
        
+        private KonsoleInput konsolenInput;
     }
 }
