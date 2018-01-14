@@ -35,6 +35,11 @@ public class ProgrammVerwalter {
         return result;
     }
     
+    public ArrayList<IProgramm> List()
+    {
+        return programme;
+    }
+    
     private boolean checkProgramm(IProgramm programm) 
     {
         return getProgramm(programm.GetProgrammIdentifier()) == null;

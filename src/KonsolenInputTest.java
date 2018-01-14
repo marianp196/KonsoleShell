@@ -34,6 +34,8 @@ class KonsolenInputTest implements Observer{
         IShell shell = new Shell(print);        
         shell.AddProgramm(new TestProgramm());
         ci.addObserver((Observer) shell);
+        
+        shell.Start();
     }
 
     @Override

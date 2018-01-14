@@ -16,5 +16,6 @@ public interface IShell {
     void SetPraeambel(String prompt);
     String GetPraeambel();
 
+    void Start();
     void AddProgramm(IProgramm p) throws Exception;
 }

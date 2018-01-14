@@ -12,6 +12,7 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import output.IPrinter;
+import shell.standardprogramme.Help;
 
 /**
  *
@@ -25,9 +26,18 @@ import output.IPrinter;
 public class Shell implements IShell,Observer 
 {
     public Shell(IPrinter printer) {       
-        this.printer = printer; 
+        this.printer = printer;   
+        registerStandardProgramme();
+    }  
+    
+    @Override
+    public void Start() 
+    {
+        started = true;
+        printPraeambel();
         printPrompt();
-    }     
+    }
+
     
     @Override
     public void SetPrompt(String prompt) 
@@ -49,7 +59,6 @@ public class Shell implements IShell,Observer
         if(praeambel == null)
             throw new NullPointerException("praeambel");
         this.praeambel = praeambel;
-        printer.PrintLn(praeambel);
     }
 
     @Override
@@ -67,6 +76,9 @@ public class Shell implements IShell,Observer
     @Override
     public void update(java.util.Observable o, Object arg) 
     {     
+        if(!started)
+            return;
+        
         try {
             String befehl = (String)arg;            
             doItOtze(entferneZeilenumbruch(befehl));           
@@ -101,7 +113,11 @@ public class Shell implements IShell,Observer
     {
         printer.Print(promt);
     }  
-      
+    
+    private void printPraeambel() {
+        printer.PrintLn(praeambel);
+    }
+          
     private void invokeProgramm(String[] parameter, IProgramm programm) throws Exception 
     {        
        programm.Invoke(parameter);
@@ -110,13 +126,24 @@ public class Shell implements IShell,Observer
     private String entferneZeilenumbruch(String befehl) {
        return befehl.replaceAll("\n", "");
     }
-
+    
+    private void registerStandardProgramme(){
+        try {
+            AddProgramm(new Help(programmVerwalter.List(), printer));
+        } catch (Exception ex) {
+            Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+   
     
     private IPrinter printer; 
-    private String promt = ">>>";
+    private String promt = ">>> ";
     private String praeambel = "*****************************************\n"
                               +"**************Standard-Shell*************\n"
                               +"*****************************************";
+   
     private ProgrammVerwalter programmVerwalter = new ProgrammVerwalter();
+    private boolean started = false;  
+
     
 }
