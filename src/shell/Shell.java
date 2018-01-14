@@ -42,9 +42,9 @@ public class Shell implements IShell,Observer
     @Override
     public void SetPrompt(String prompt) 
     {
-        if(promt == null)
+        if(prompt == null)
             throw new NullPointerException("promt");
-        this.promt = promt;
+        this.promt = prompt;
     }
 
     @Override
