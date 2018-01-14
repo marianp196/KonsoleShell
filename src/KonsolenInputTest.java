@@ -23,6 +23,11 @@ class KonsolenInputTest implements Observer{
      */
     public static void main(String[] args) throws Exception 
     {   
+        //KonsoleInput ci = new KonsoleInput(new KonsolenInputTest());
+        testshell();
+    }
+
+    private static void testshell() throws Exception {
         IPrinter print = new StandardPrinter();
         IShell shell = new Shell(print);
         KonsoleInput ci = new KonsoleInput((Observer) shell);

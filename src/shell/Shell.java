@@ -82,7 +82,7 @@ public class Shell implements IShell,Observer
         BefehlsDecoder decoder = new BefehlsDecoder(befehl);
         
         if (!decoder.HasBefehl()) {
-            printer.PrintLn("Befehl nicht interpretierbar!");
+            printer.PrintLn("Befehl nicht interpretierbar! " + befehl);
             return;
         }               
         
@@ -90,7 +90,7 @@ public class Shell implements IShell,Observer
         
         if(programm == null)
         {
-            printer.PrintLn("Befehl nicht vorhanden");
+            printer.PrintLn("Befehl nicht vorhanden: " + befehl);
             return;
         }
         

@@ -40,13 +40,18 @@ public class KonsoleInput extends Observable
         @Override
         public void run() 
         {
-             while(true)
+            String input = "";
+            while(true)
             {
                 try {
                     byte[] b = new byte[100];
                     int i = System.in.read(b);
-                    String s = new String(b,0,i);
-                    triggerInput(s);
+                    input += new String(b,0,i);
+                    if(input.contains("\n"))
+                    {
+                        triggerInput(input);
+                        input="";
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(KonsoleInput.class.getName()).log(Level.SEVERE, null, ex);
                 }
